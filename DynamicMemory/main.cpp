@@ -2,26 +2,26 @@
 using namespace std;
 #define TAB "\t "
 
-void Allocate(int** arr, const int rows, const int cols);
-void Randl_arr(int** arr, const int rows, const int cols);
-void Randl_row(int** arr, const int row, const int cols);
-void Randl_col(int** arr, const int rows, const int col);
-void Print(int** arr, const int rows, const int cols);
-void Clear(int** arr, const int rows);
+void Allocate(int** arr, const int rows, const int cols);//Выделение пямяти под двумерный динамический массив
+void FillRand_arr(int** arr, const int rows, const int cols);//Заполнение массива произвольными числами
+void FillRand_row(int** arr, const int row, const int cols);//Заполнение строки массива произвольными числами
+void FillRand_col(int** arr, const int rows, const int col);//Заполнение столбца массива призвольными числами
+void Print(int** arr, const int rows, const int cols);//Вывод массива в консоль
+void Clear(int** arr, const int rows);//Удаление двумерного динамического массива из памяти
 
-void push_row_back(int**& arr,  int & rows, const int cols);
-void push_row_front(int**& arr,  int & rows, const int cols);
-void insert_row(int**& arr, int& rows, const int cols, const int index );
-void pop_row_back(int**& arr,  int & rows, const int cols);
-void pop_row_front(int**& arr,  int & rows, const int cols);
-void erase_row(int**& arr, int& rows, const int cols, const int index );
+void push_row_back(int**& arr,  int & rows, const int cols);//Добавление строки в конец массива
+void push_row_front(int**& arr,  int & rows, const int cols);//Добавление строки в начало массива
+void insert_row(int**& arr, int& rows, const int cols, const int index );//Вставка строки в массив по указанному индексу
+void pop_row_back(int**& arr,  int & rows, const int cols);//Удаление последней строки массива
+void pop_row_front(int**& arr,  int & rows, const int cols);//Удаление нулевой строки массива
+void erase_row(int**& arr, int& rows, const int cols, const int index );//Удаление строки в массиве по указанному индексу
 
-void push_col_back(int**& arr, const int rows, int& cols);
-void push_col_front(int**& arr, const int rows, int& cols);
-void insert_col(int**& arr, const int rows, int& cols, const int index );
-void pop_col_back(int**& arr, const int rows, int& cols);
-void pop_col_front(int**& arr, const int rows, int& cols);
-void erase_col(int**& arr, const int rows, int& cols, const int index);
+void push_col_back(int**& arr, const int rows, int& cols);//Добавление столбца в конец массива
+void push_col_front(int**& arr, const int rows, int& cols);//Добавление столбца в начало массива
+void insert_col(int**& arr, const int rows, int& cols, const int index );//Добавление столбца в массив по указанному индексу
+void pop_col_back(int**& arr, const int rows, int& cols);//Удаление последнего столбца в массиве
+void pop_col_front(int**& arr, const int rows, int& cols);//Удаление нулевого столбца в массиве
+void erase_col(int**& arr, const int rows, int& cols, const int index);//Удаление столбца в массиве по указанному индексу
 
 
 
@@ -36,16 +36,19 @@ void main()
 	cout << "Введите количество элементов строки :"; cin >> cols;
 	int** arr = new int* [rows];
 	Allocate(arr, rows, cols);
-	Randl_arr(arr, rows, cols);
+	FillRand_arr(arr, rows, cols);
+	cout << "Исходный двумерный динамический массив" << endl;
 	Print(arr, rows, cols);
 
+	// Работа со строками массива
+	
 	push_row_back(arr, rows, cols);
 	Print(arr, rows,cols);
 	push_row_front(arr, rows, cols);
 	Print(arr, rows,cols);
 	do
 	{
-		cout << "Введите индекс для вставки строки в массив от 0 до " << rows - 1<<" "; cin >> index;
+		cout << "Введите индекс для вставки строки в массив от 0 до " << rows - 1<<": "; cin >> index;
 	} while (index>=rows);
 	insert_row(arr, rows, cols, index);
 	Print(arr, rows,cols);
@@ -55,10 +58,12 @@ void main()
 	Print(arr, rows,cols);
 	do
 	{
-		cout << "Введите индекс для удаление строки из массив от 0 до " << rows - 1<<" "; cin >> index;
+		cout << "Введите индекс для удаление строки из массив от 0 до " << rows - 1<<": "; cin >> index;
 	} while (index>=rows);
 	erase_row(arr, rows,cols,index);
 	Print(arr, rows,cols);
+
+	// Работа со столбцами массива
 
 	push_col_back(arr, rows, cols);
 	Print(arr, rows,cols);
@@ -66,7 +71,7 @@ void main()
 	Print(arr, rows,cols);
 	do
 	{
-		cout << "Введите индекс для вставки столбца в массив от 0 до " << cols - 1 << " "; cin >> index;
+		cout << "Введите индекс для вставки столбца в массив от 0 до " << cols - 1 << ": "; cin >> index;
 	} while (index >= cols);
 	insert_col(arr, rows, cols, index);
 	Print(arr, rows,cols);
@@ -76,7 +81,7 @@ void main()
 	Print(arr, rows,cols);
 	do
 	{
-		cout << "Введите индекс для удаления столбца в массив от 0 до " << cols - 1 << " "; cin >> index;
+		cout << "Введите индекс для удаления столбца в массив от 0 до " << cols - 1 << ": "; cin >> index;
 	} while (index >= cols);
 	erase_col(arr, rows, cols, index);
 	Print(arr, rows,cols);
@@ -101,15 +106,15 @@ void Clear(int** arr, const int rows)
 	for (int i = 0; i < rows; i++) delete[] arr[i];
 	delete[] arr;
 }
-void Randl_arr(int** arr, const int rows, const int cols)
+void FillRand_arr(int** arr, const int rows, const int cols)
 {
 	for (int i = 0; i < rows; i++) for (int j = 0; j < cols; j++) arr[i][j] = rand() % 100;
 }
-void Randl_row(int** arr, const int row, const int cols)
+void FillRand_row(int** arr, const int row, const int cols)
 {
 	for (int i = 0; i < cols; i++) arr[row][i] = rand() % 100;
 }
-void Randl_col(int** arr, const int rows, const int col)
+void FillRand_col(int** arr, const int rows, const int col)
 {
 	for (int i = 0; i < rows; i++) arr[i][col] = rand() % 100;
 }
@@ -121,7 +126,7 @@ void push_row_back(int**&arr, int& rows, const int cols)
 	Allocate(bufer, rows+1, cols);
 	for (int i = 0; i < rows; i++) for (int j = 0; j < cols; j++) bufer[i][j] = arr[i][j];
 	Clear(arr, rows);
-	Randl_row(bufer, rows,cols);
+	FillRand_row(bufer, rows,cols);
 	rows++;
 	arr = bufer;
 }
@@ -132,7 +137,7 @@ void push_row_front(int**& arr, int& rows, const int cols)
 	Allocate(bufer, rows + 1, cols);
 	for (int i = 0; i < rows; i++) for (int j = 0; j < cols; j++) bufer[i+1][j] = arr[i][j];
 	Clear(arr, rows);
-	Randl_row(bufer, rows-rows, cols);
+	FillRand_row(bufer, rows-rows, cols);
 	rows++;
 	arr = bufer;
 }
@@ -143,7 +148,7 @@ void insert_row(int**& arr, int& rows, const int cols, const int index)
 	Allocate(bufer, rows+1, cols);
 	for (int i = 0; i < rows; i++) for (int j = 0; j < cols; j++) (i < index ? bufer[i][j] : bufer[i + 1][j]) = arr[i][j];
 	Clear(arr, rows);
-	Randl_row(bufer, index, cols);
+	FillRand_row(bufer, index, cols);
 	rows++;
 	arr = bufer;
 }
@@ -185,7 +190,7 @@ void push_col_back(int**& arr, const int rows, int& cols)
 	Allocate(bufer, rows, cols+1);
 	for (int i = 0; i < rows; i++) for (int j = 0; j < cols; j++) bufer[i][j] = arr[i][j];
 	Clear(arr, rows);
-	Randl_col(bufer, rows, cols);
+	FillRand_col(bufer, rows, cols);
 	cols++;
 	arr = bufer;
 
@@ -197,7 +202,7 @@ void push_col_front(int**& arr, const int rows, int& cols)
 	Allocate(bufer, rows, cols + 1);
 	for (int i = 0; i < rows; i++) for (int j = 0; j < cols; j++) bufer[i][j+1] = arr[i][j];
 	Clear(arr, rows);
-	Randl_col(bufer, rows, cols-cols);
+	FillRand_col(bufer, rows, cols-cols);
 	cols++;
 	arr = bufer;
 
@@ -209,7 +214,7 @@ void insert_col(int**& arr, const int rows, int& cols, const int index)
 	Allocate(bufer, rows, cols+1);
 	for (int i = 0; i < rows; i++) for (int j = 0; j < cols; j++) (j < index ? bufer[i][j] : bufer[i][j+1])=arr[i][j];
 	Clear(arr, rows);
-	Randl_col(bufer, rows, index);
+	FillRand_col(bufer, rows, index);
 	cols++;
 	arr = bufer;
 
