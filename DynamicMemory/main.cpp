@@ -4,8 +4,8 @@ using namespace std;
 
 template<typename T> T** Allocate(const int rows, const int cols);//Выделение пямяти под двумерный динамический массив
 template<typename T> void FillRand_arr(T** arr, const int rows, const int cols, int minRand = 0, int maxRand = 100);//Заполнение массива произвольными числами
-void FillRand_row(int** arr, const int row, const int cols);//Заполнение строки массива произвольными числами
-void FillRand_col(int** arr, const int rows, const int col);//Заполнение столбца массива призвольными числами
+template<typename T> void FillRand_row(T** arr, const int row, const int cols, int minRand = 0, int maxRand = 100);//Заполнение строки массива произвольными числами
+template<typename T> void FillRand_col(T** arr, const int rows, const int col, int minRand = 0, int maxRand = 100);//Заполнение столбца массива призвольными числами
 template<typename T> void Print(T** arr, const int rows, const int cols);//Вывод массива в консоль
 template<typename T> void Clear(T** arr, const int rows);//Удаление двумерного динамического массива из памяти
 
@@ -32,19 +32,22 @@ void main()
 	cout << "Исходный двумерный динамический массив" << endl;
 	Print(arr, rows, cols);
 
-	// Работа со строками массива
+	///////////////////////// РАБОТА СО СТРОКАМИ МАССИВА //////////////////////////////////////////////
 	
 	cout << "Добавляем строку в конец массива"<<endl;
-	push_row(arr, rows, cols,rows);
+	push_row(arr, rows, cols, rows);
+	FillRand_row(arr, rows-1, cols);
 	Print(arr, rows,cols);
 	cout << "Добавляем строку в начало массива " << endl;
 	push_row(arr, rows, cols);
+	FillRand_row(arr, rows-rows, cols);
 	Print(arr, rows,cols);
 	do
 	{
 		cout << "Введите индекс для вставки строки в массив от 0 до " << rows - 1<<": "; cin >> index;
 	} while (index>=rows);
 	push_row(arr, rows, cols, index);
+	FillRand_row(arr, index, cols);
 	Print(arr, rows,cols);
 	cout << "Удаляем строку в конце массива " << endl;
 	pop_row(arr, rows, cols, rows);
@@ -59,19 +62,22 @@ void main()
 	pop_row(arr, rows,cols,index);
 	Print(arr, rows,cols);
 
-	// Работа со столбцами массива
+	//////////////////////// РАБОТЕ СО СТОЛБЦАМИ МАССИВА ////////////////////////////////////////////////
 
 	cout << "Добавляем столбец в конец массива"<<endl;
 	push_col(arr, rows, cols,cols);
+	FillRand_col(arr, rows, cols - 1);
 	Print(arr, rows,cols);
 	cout << "Добавляем столбец в начало массива"<<endl;
 	push_col(arr, rows, cols);
+	FillRand_col(arr, rows, cols - cols);
 	Print(arr, rows,cols);
 	do
 	{
 		cout << "Введите индекс для вставки столбца в массив от 0 до " << cols - 1 << ": "; cin >> index;
 	} while (index >= cols);
 	push_col(arr, rows, cols, index);
+	FillRand_col(arr, rows, index);
 	Print(arr, rows,cols);
 	cout << "Удаление последнего столбца в массиве" << endl;
 	pop_col(arr, rows, cols,cols);
@@ -130,13 +136,43 @@ template<typename T> void FillRand_arr(T** arr, const int rows, const int cols, 
 		}
 	}
 }
-void FillRand_row(int** arr, const int row, const int cols)
+template<typename T>void FillRand_row(T** arr, const int row, const int cols, int minRand, int maxRand)
 {
-	for (int i = 0; i < cols; i++) arr[row][i] = rand() % 100;
+	if (minRand > maxRand)
+	{
+		int bufer = minRand;
+		minRand = maxRand;
+		maxRand = bufer;
+	}
+	if (typeid(arr) == typeid(double**) || typeid(arr) == typeid(float**))
+	{
+		minRand *= 100;
+		maxRand *= 100;
+	}
+	for (int i = 0; i < cols; i++)
+	{
+		arr[row][i] = rand() % (maxRand - minRand) + minRand;
+		if (typeid(arr) == typeid(double**) || typeid(arr) == typeid(float**))arr[row][i] /= 100;
+	}
 }
-void FillRand_col(int** arr, const int rows, const int col)
+template<typename T>void FillRand_col(T** arr, const int rows, const int col, int minRand, int maxRand)
 {
-	for (int i = 0; i < rows; i++) arr[i][col] = rand() % 100;
+	if (minRand > maxRand)
+	{
+		int bufer = minRand;
+		minRand = maxRand;
+		maxRand = bufer;
+	}
+	if (typeid(arr) == typeid(double**) || typeid(arr) == typeid(float**))
+	{
+		minRand *= 100;
+		maxRand *= 100;
+	}
+	for (int i = 0; i < rows; i++)
+	{
+		arr[i][col] = rand() % (maxRand - minRand) + minRand;
+		if (typeid(arr) == typeid(double**) || typeid(arr) == typeid(float**))arr[i][col] /= 100;
+	}
 }
 
 template<typename T>void push_row(T**& arr, int& rows, const int cols, int index)
