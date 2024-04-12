@@ -62,7 +62,7 @@ void main()
 	pop_row(arr, rows,cols,index);
 	Print(arr, rows,cols);
 
-	//////////////////////// РАБОТЕ СО СТОЛБЦАМИ МАССИВА ////////////////////////////////////////////////
+	//////////////////////// РАБОТА СО СТОЛБЦАМИ МАССИВА ////////////////////////////////////////////////
 
 	cout << "Добавляем столбец в конец массива"<<endl;
 	push_col(arr, rows, cols,cols);
@@ -80,7 +80,7 @@ void main()
 	FillRand_col(arr, rows, index);
 	Print(arr, rows,cols);
 	cout << "Удаление последнего столбца в массиве" << endl;
-	pop_col(arr, rows, cols,cols);
+	pop_col(arr, rows, cols, cols);
 	Print(arr, rows,cols);
 	cout << "Удаление нулевого столбца в массиве" << endl;
 	pop_col(arr, rows, cols);
@@ -199,7 +199,7 @@ template<typename T> void push_col(T**& arr, const int rows, int& cols, int inde
 	for (int i = 0; i < rows; i++)
 	{
 		T* bufer = new T[cols + 1]{};
-		for (int j = 0; j < cols; j++) (i < index ? bufer[j] : bufer[j + 1]) = arr[i][j];
+		for (int j = 0; j < cols; j++) (j < index ? bufer[j] : bufer[j + 1]) = arr[i][j];
 		delete[] arr[i];
 		arr[i] = bufer;
 	}
