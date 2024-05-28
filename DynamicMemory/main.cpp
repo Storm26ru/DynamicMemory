@@ -184,7 +184,7 @@ template<typename T>void push_row(T**& arr, int& rows, const int cols, int index
 	rows++;
 	arr = bufer;
 }
-template<typename T>void pop_row(T**& arr, int& rows, const int cols, int index)
+template<typename T>void pop_row(T**& arr, int& rows, const int cols, int index=0)
 {
 	T** bufer = new T* [--rows];
 	if (index > rows) index = rows;
